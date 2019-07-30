@@ -1,0 +1,21 @@
+﻿@model IList<Park>
+@{
+    ViewData["Title"] = "GetParks";
+}
+
+<h2>Welcome to the best national park site in the world!!!</h2>
+<table class="table-responsive">
+    @foreach (Park park in Model)
+    {
+        <tr>
+            <td>
+                <img class="image1" src="~/images/parks/@(park.ParkCode).jpg" />
+            </td>
+            <td>
+                <h4><a asp-controller="Parks" asp-action="GetPark" asp-route-ParkCode="@park.ParkCode"> @park.ParkName</a> in @park.State</h4>
+                <p class="description">@park.Description </p>             
+            </td>
+        </tr>
+
+    }
+</table>

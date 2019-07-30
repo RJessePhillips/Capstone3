@@ -1,0 +1,21 @@
+﻿@model List<SurveyVM>
+@{
+    ViewData["Title"] = "GetAllSurvey";
+}
+
+<h2>Survey Rankings - Enjoy!</h2>
+<table>
+    @foreach (SurveyVM vm in Model)
+    {
+        <tr>
+            <td>
+                <img class="image1" src="~/images/parks/@(vm.ParkCode).jpg" />
+            </td>
+            <td>
+                <h4>Park Name: @vm.ParkName</h4>
+                <h4>Number of surveys: @vm.Tally</h4>
+            </td>
+        </tr>
+    }
+
+</table>

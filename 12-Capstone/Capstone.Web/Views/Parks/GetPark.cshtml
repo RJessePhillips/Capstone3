@@ -1,0 +1,119 @@
+﻿@model ParkDetailVM
+@{
+    ViewData["Title"] = "GetPark";
+}
+
+<h2>@Model.Park.ParkName</h2>
+<img class="image" src="~/images/parks/@(Model.Park.ParkCode).jpg" />
+<table class="table table-striped">
+    <tr>
+        <td>State: @Model.Park.State</td>
+    </tr>
+    <tr>
+        <td>Acerage: @Model.Park.Acreage</td>
+    </tr>
+    <tr>
+        <td>Elevation: @(Model.Park.Elevation)ft.</td>
+    </tr>
+    <tr>
+        <td>Hiking Trail Length: @(Model.Park.Miles) miles</td>
+    </tr>
+    <tr>
+        <td>Number of Campsites: @Model.Park.Campsites</td>
+    </tr>
+    <tr>
+        <td>Climate: @Model.Park.Climate</td>
+    </tr>
+    <tr>
+        <td>Year Founded: @Model.Park.Founded</td>
+    </tr>
+    <tr>
+        <td>Annual Visitor Count: @Model.Park.Visitors</td>
+    </tr>
+    <tr>
+        <td><p class="quote">Famous Quote: @Model.Park.Quote</p><p class="quote">Author: @Model.Park.QuoteSource</p></td>
+    </tr>
+    <tr>
+        <td>Description: @Model.Park.Description</td>
+    </tr>
+    <tr>
+        <td>Entry Fee: @Model.Park.Fee.ToString("C")</td>
+    </tr>
+    <tr>
+        <td>Number of Native Animal Species: @Model.Park.Animals</td>
+    </tr>
+
+</table>
+<p class="tempchoice">Would you prefer your 5 day forecast in Fahrenheit or Celsius?</p>
+
+
+<div class="temp">
+    <form method="post" asp-action="GetPark" asp-controller="Parks">
+        <input type="hidden" asp-for="Park.ParkCode" />
+        <label asp-for="Temperature">
+            <input asp-for="Temperature" type="radio" value="Fahrenheit" name="Temperature" />Fahrenheit
+        </label>
+        <label asp-for="Temperature">
+            <input asp-for="Temperature" type="radio" value="Celsius" name="Temperature" />Celsius
+        </label>
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+
+
+@{
+    int GetHighTemp(Weather weather, string temp)
+    {
+        if (temp == "Celsius")
+        {
+            return (int)((weather.High - 32) * 5 / 9);
+        }
+        return weather.High;
+    }
+
+    int GetLowTemp(Weather weather, string temp)
+    {
+        if (temp == "Celsius")
+        {
+            return (int)((weather.Low - 32) * 5 / 9);
+        }
+        return weather.Low;
+    }
+}
+
+<section>
+    <table class="forecast">
+
+        <tbody>
+            <tr>
+                @foreach (Weather weather in Model.Weather)
+                {
+                    <td class="singleReport">
+                        <p class="advice"><img src="~/images/weather/@(weather.Forecast.Replace(" ", "")).png" /></p>
+                        <p class="advice">High: @GetHighTemp(weather, Model.Temperature) Low: @GetLowTemp(weather, Model.Temperature)</p>
+
+
+                        @if (Model.Temperature == "Celsius")
+                        {
+                            @foreach (string celsiusAdvice in weather.CelsiusAdvice)
+                            {
+                                <p class="advice">@celsiusAdvice</p>
+                            }
+                        }
+
+
+                        @if (Model.Temperature == "Fahrenheit")
+                        {
+                            @foreach (string fahrenheitAdvice in weather.FahrenheitAdvice)
+                            {
+                                <p class="advice">@fahrenheitAdvice</p>
+                            }
+
+                        }
+
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</section>
